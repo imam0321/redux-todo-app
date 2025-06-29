@@ -1,11 +1,11 @@
-import { Button } from "./components/ui/button";
+import { Outlet } from "react-router";
+import Navbar from "./components/Navbar/Navbar";
 
 function App() {
   return (
     <>
-      <div>
-        <Button>Redux todo app</Button>
-      </div>
+      <Navbar />
+      <Outlet />
     </>
   );
 }
