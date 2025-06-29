@@ -10,13 +10,12 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { useForm } from "react-hook-form";
+import { useForm, type FieldValues, type SubmitHandler } from "react-hook-form";
 import { Input } from "../ui/input";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { Textarea } from "../ui/textarea";
@@ -27,18 +26,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { Link } from "react-router";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { cn } from "@/lib/utils";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "../ui/calendar";
 import { format } from "date-fns";
+import { useAppDispatch } from "@/redux/hooks";
+import { addTask } from "@/redux/features/tasks/tasksSlice";
+import type { ITask } from "@/utils/taskType";
 
 const AddTaskModal = () => {
   const form = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const dispatch = useAppDispatch();
+
+  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+    const formattedData = {
+      ...data,
+      dueDate: data.dueDate ? data.dueDate.toISOString() : null,
+    };
+    dispatch(addTask(formattedData as ITask));
   };
 
   return (
@@ -79,7 +86,7 @@ const AddTaskModal = () => {
             />
             <FormField
               control={form.control}
-              name="dou-date"
+              name="dueDate"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>Dou Date</FormLabel>
@@ -140,8 +147,8 @@ const AddTaskModal = () => {
               )}
             />
 
-            <DialogFooter className="mt-2">
-              <Button variant="outline" type="submit">
+            <DialogFooter>
+              <Button variant="outline" type="submit" className="mt-2">
                 Save
               </Button>
             </DialogFooter>
